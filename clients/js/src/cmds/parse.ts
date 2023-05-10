@@ -9,6 +9,15 @@ export const builder = (y: typeof yargs) => {
     type: "string",
   });
 };
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+interface BigInt {
+    /** Convert to BigInt to string form in JSON.stringify */
+    toJSON: () => string;
+}
+// Without this JSON.stringify() blows up
+(BigInt.prototype as any).toJSON = function () {
+    return this.toString();
+};
 export const handler = (argv) => {
   let buf: Buffer;
   try {
@@ -25,5 +34,5 @@ export const handler = (argv) => {
   const parsed_vaa = parse(buf);
   let parsed_vaa_with_digest = parsed_vaa;
   parsed_vaa_with_digest["digest"] = vaaDigest(parsed_vaa);
-  console.log(parsed_vaa_with_digest);
+  console.log(JSON.stringify(parsed_vaa_with_digest, null, 2));
 };
