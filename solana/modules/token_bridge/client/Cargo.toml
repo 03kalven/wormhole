@@ -17,4 +17,4 @@ solana-cli-config = "=1.10.31"
 solitaire = { path = "../../../solitaire/program" }
 solana-clap-utils = "=1.10.31"
 hex = "0.4.3"
-spl-token-metadata = { path = "../token-metadata" }
+mpl-token-metadata = { path = "../forked-mpl-token-metadata" }

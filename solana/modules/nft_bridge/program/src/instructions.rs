@@ -188,7 +188,7 @@ pub fn complete_wrapped(
             AccountMeta::new_readonly(bridge_id, false),
             AccountMeta::new_readonly(spl_token::id(), false),
             AccountMeta::new_readonly(spl_associated_token_account::id(), false),
-            AccountMeta::new_readonly(spl_token_metadata::id(), false),
+            AccountMeta::new_readonly(mpl_token_metadata::id(), false),
         ],
         data: (crate::instruction::Instruction::CompleteWrapped, data).try_to_vec()?,
     })
@@ -229,7 +229,7 @@ pub fn complete_wrapped_meta(
     // SPL Metadata
     let spl_metadata = SplTokenMeta::key(
         &SplTokenMetaDerivationData { mint: mint_key },
-        &spl_token_metadata::id(),
+        &mpl_token_metadata::id(),
     );
 
     Ok(Instruction {
@@ -250,7 +250,7 @@ pub fn complete_wrapped_meta(
             AccountMeta::new_readonly(bridge_id, false),
             AccountMeta::new_readonly(spl_token::id(), false),
             AccountMeta::new_readonly(spl_associated_token_account::id(), false),
-            AccountMeta::new_readonly(spl_token_metadata::id(), false),
+            AccountMeta::new_readonly(mpl_token_metadata::id(), false),
         ],
         data: (crate::instruction::Instruction::CompleteWrappedMeta, data).try_to_vec()?,
     })
@@ -335,7 +335,7 @@ pub fn transfer_native(
     // SPL Metadata
     let spl_metadata = SplTokenMeta::key(
         &SplTokenMetaDerivationData { mint },
-        &spl_token_metadata::id(),
+        &mpl_token_metadata::id(),
     );
 
     // Bridge keys
@@ -414,7 +414,7 @@ pub fn transfer_wrapped(
         &SplTokenMetaDerivationData {
             mint: wrapped_mint_key,
         },
-        &spl_token_metadata::id(),
+        &mpl_token_metadata::id(),
     );
 
     // Bridge keys

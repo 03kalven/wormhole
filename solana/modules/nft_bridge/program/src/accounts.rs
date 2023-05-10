@@ -101,7 +101,7 @@ impl<'b> Seeded<&SplTokenMetaDerivationData> for SplTokenMeta<'b> {
     fn seeds(data: &SplTokenMetaDerivationData) -> Vec<Vec<u8>> {
         vec![
             "metadata".as_bytes().to_vec(),
-            spl_token_metadata::id().as_ref().to_vec(),
+            mpl_token_metadata::id().as_ref().to_vec(),
             data.mint.as_ref().to_vec(),
         ]
     }

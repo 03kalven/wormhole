@@ -34,7 +34,6 @@ use solitaire::{
     },
     *,
 };
-use spl_token_metadata::state::Metadata;
 
 #[derive(FromAccounts)]
 pub struct AttestToken<'b> {
@@ -120,14 +119,17 @@ pub fn attest_token(
     if !accs.spl_metadata.data_is_empty() {
         let derivation_data: SplTokenMetaDerivationData = (&*accs).into();
         accs.spl_metadata
-            .verify_derivation(&spl_token_metadata::id(), &derivation_data)?;
+            .verify_derivation(&mpl_token_metadata::id(), &derivation_data)?;
 
-        if *accs.spl_metadata.owner != spl_token_metadata::id() {
+        if *accs.spl_metadata.owner != mpl_token_metadata::id() {
             return Err(WrongAccountOwner.into());
         }
 
-        let metadata: Metadata =
-            Metadata::from_account_info(accs.spl_metadata.info()).ok_or(InvalidMetadata)?;
+        let metadata = {
+            let mut data: &[u8] = &accs.spl_metadata.info().try_borrow_data()?;
+            mpl_token_metadata::utils::meta_deser_unchecked(&mut data)
+                .map_err(|_| InvalidMetadata)?
+        };
         payload.name = metadata.data.name.clone();
         payload.symbol = metadata.data.symbol;
     }

@@ -40,7 +40,7 @@ RUN --mount=type=cache,target=target,id=build \
     cp target/deploy/wormhole_migration.so /opt/solana/deps/wormhole_migration.so && \
     cp target/deploy/token_bridge.so /opt/solana/deps/token_bridge.so && \
     cp target/deploy/nft_bridge.so /opt/solana/deps/nft_bridge.so && \
-    cp modules/token_bridge/token-metadata/spl_token_metadata.so /opt/solana/deps/spl_token_metadata.so
+    cp modules/token_bridge/forked-mpl-token-metadata/mpl_token_metadata.so /opt/solana/deps/mpl_token_metadata.so
 
 FROM scratch AS export-stage
 COPY --from=builder /opt/solana/deps /

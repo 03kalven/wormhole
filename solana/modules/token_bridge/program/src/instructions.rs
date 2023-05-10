@@ -364,7 +364,7 @@ pub fn create_wrapped(
     // SPL Metadata
     let spl_metadata = SplTokenMeta::key(
         &SplTokenMetaDerivationData { mint: mint_key },
-        &spl_token_metadata::id(),
+        &mpl_token_metadata::id(),
     );
 
     Ok(Instruction {
@@ -385,7 +385,7 @@ pub fn create_wrapped(
             // Program
             AccountMeta::new_readonly(bridge_id, false),
             AccountMeta::new_readonly(spl_token::id(), false),
-            AccountMeta::new_readonly(spl_token_metadata::id(), false),
+            AccountMeta::new_readonly(mpl_token_metadata::id(), false),
         ],
         data: (crate::instruction::Instruction::CreateWrapped, data).try_to_vec()?,
     })
@@ -815,7 +815,7 @@ pub fn attest(
     // SPL Metadata
     let spl_metadata = SplTokenMeta::key(
         &SplTokenMetaDerivationData { mint },
-        &spl_token_metadata::id(),
+        &mpl_token_metadata::id(),
     );
 
     // Mint Metadata

@@ -412,7 +412,7 @@ pub fn spl_meta_address(mint_address: Vec<u8>) -> Vec<u8> {
 
     let spl_metadata = SplTokenMeta::key(
         &SplTokenMetaDerivationData { mint: mint_key },
-        &spl_token_metadata::id(),
+        &mpl_token_metadata::id(),
     );
 
     spl_metadata.to_bytes().to_vec()

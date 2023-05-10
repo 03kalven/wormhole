@@ -40,10 +40,6 @@ use solitaire::{
     *,
 };
 
-use spl_token_metadata::state::{
-    Data as SplData,
-    Metadata,
-};
 use std::cmp::min;
 
 #[derive(FromAccounts)]
@@ -154,7 +150,7 @@ pub fn create_accounts(
 
     // Initialize spl meta
     accs.spl_metadata.verify_derivation(
-        &spl_token_metadata::id(),
+        &mpl_token_metadata::id(),
         &SplTokenMetaDerivationData {
             mint: *accs.mint.info().key,
         },
@@ -164,8 +160,8 @@ pub fn create_accounts(
     let name = truncate_utf8(&accs.vaa.name, 32 - 11) + " (Wormhole)";
     let symbol = truncate_utf8(&accs.vaa.symbol, 10);
 
-    let spl_token_metadata_ix = spl_token_metadata::instruction::create_metadata_accounts(
-        spl_token_metadata::id(),
+    let spl_token_metadata_ix = mpl_token_metadata::instruction::create_metadata_accounts_v3(
+        mpl_token_metadata::id(),
         *accs.spl_metadata.key,
         *accs.mint.info().key,
         *accs.mint_authority.info().key,
@@ -178,6 +174,9 @@ pub fn create_accounts(
         0,
         false,
         true,
+        None,
+        None,
+        None,
     );
     invoke_seeded(&spl_token_metadata_ix, ctx, &accs.mint_authority, None)?;
 
@@ -195,27 +194,36 @@ pub fn update_accounts(
     _data: CreateWrappedData,
 ) -> Result<()> {
     accs.spl_metadata.verify_derivation(
-        &spl_token_metadata::id(),
+        &mpl_token_metadata::id(),
         &SplTokenMetaDerivationData {
             mint: *accs.mint.info().key,
         },
     )?;
 
-    let mut metadata: SplData = Metadata::from_account_info(accs.spl_metadata.info())
-        .ok_or(InvalidMetadata)?
-        .data;
+    let metadata = {
+        let mut data: &[u8] = &accs.spl_metadata.info().try_borrow_data()?;
+        mpl_token_metadata::utils::meta_deser_unchecked(&mut data).map_err(|_| InvalidMetadata)?
+    };
 
-    // Normalize token metadata.
-    metadata.name = truncate_utf8(&accs.vaa.name, 32 - 11) + " (Wormhole)";
-    metadata.symbol = truncate_utf8(&accs.vaa.symbol, 10);
+    // Normalize token metadata's name and symbol.
+    let new_data_v2 = mpl_token_metadata::state::DataV2 {
+        name: truncate_utf8(&accs.vaa.name, 32 - 11) + " (Wormhole)",
+        symbol: truncate_utf8(&accs.vaa.symbol, 10),
+        uri: metadata.data.uri,
+        seller_fee_basis_points: metadata.data.seller_fee_basis_points,
+        creators: metadata.data.creators,
+        collection: metadata.collection,
+        uses: metadata.uses,
+    };
 
     // Update SPL Metadata
-    let spl_token_metadata_ix = spl_token_metadata::instruction::update_metadata_accounts(
-        spl_token_metadata::id(),
+    let spl_token_metadata_ix = mpl_token_metadata::instruction::update_metadata_accounts_v2(
+        mpl_token_metadata::id(),
         *accs.spl_metadata.key,
         *accs.mint_authority.info().key,
         None,
-        Some(metadata),
+        Some(new_data_v2),
+        None,
         None,
     );
     invoke_seeded(&spl_token_metadata_ix, ctx, &accs.mint_authority, None)?;

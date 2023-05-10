@@ -100,15 +100,15 @@ fn command_create_meta(
     let meta_acc = Pubkey::find_program_address(
         &[
             "metadata".as_bytes(),
-            spl_token_metadata::id().as_ref(),
+            mpl_token_metadata::id().as_ref(),
             mint.as_ref(),
         ],
-        &spl_token_metadata::id(),
+        &mpl_token_metadata::id(),
     )
     .0;
     println!("Meta account: {}", meta_acc);
-    let ix = spl_token_metadata::instruction::create_metadata_accounts(
-        spl_token_metadata::id(),
+    let ix = mpl_token_metadata::instruction::create_metadata_accounts_v3(
+        mpl_token_metadata::id(),
         meta_acc,
         *mint,
         config.owner.pubkey(),
@@ -121,6 +121,9 @@ fn command_create_meta(
         0,
         false,
         false,
+        None,
+        None,
+        None,
     );
     let mut transaction = Transaction::new_with_payer(&[ix], Some(&config.fee_payer.pubkey()));
 
@@ -328,15 +331,21 @@ fn main() {
             let meta_acc = Pubkey::find_program_address(
                 &[
                     "metadata".as_bytes(),
-                    spl_token_metadata::id().as_ref(),
+                    mpl_token_metadata::id().as_ref(),
                     mint.as_ref(),
                 ],
-                &spl_token_metadata::id(),
+                &mpl_token_metadata::id(),
             )
             .0;
-            let meta_info = config.rpc_client.get_account(&meta_acc).unwrap();
-            let meta_info =
-                spl_token_metadata::state::Metadata::from_bytes(&meta_info.data).unwrap();
+            let meta_info = mpl_token_metadata::utils::meta_deser_unchecked(
+                &mut config
+                    .rpc_client
+                    .get_account(&meta_acc)
+                    .unwrap()
+                    .data
+                    .as_slice(),
+            )
+            .unwrap();
             println!("Key: {:?}", meta_info.key);
             println!("Mint: {}", meta_info.mint);
             println!("Metadata Key: {}", meta_acc);
