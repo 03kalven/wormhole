@@ -57,7 +57,7 @@
                     "isSigner": false
                 },
                 {
-                    "name": "splMetadata",
+                    "name": "tokenMetadata",
                     "isMut": false,
                     "isSigner": false
                 },
@@ -583,7 +583,7 @@
                     "isSigner": false
                 },
                 {
-                    "name": "splMetadata",
+                    "name": "tokenMetadata",
                     "isMut": true,
                     "isSigner": false
                 },
@@ -608,7 +608,7 @@
                     "isSigner": false
                 },
                 {
-                    "name": "splMetadataProgram",
+                    "name": "tokenMetadataProgram",
                     "isMut": false,
                     "isSigner": false
                 },

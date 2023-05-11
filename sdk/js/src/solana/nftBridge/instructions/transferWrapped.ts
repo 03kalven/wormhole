@@ -1,10 +1,10 @@
+import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import {
   PublicKey,
   PublicKeyInitData,
   TransactionInstruction,
 } from "@solana/web3.js";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { createReadOnlyNftBridgeProgramInterface } from "../program";
+import { TOKEN_METADATA_PROGRAM_ID, deriveTokenMetadataKey } from "../../utils";
 import { getPostMessageAccounts } from "../../wormhole";
 import {
   deriveAuthoritySignerKey,
@@ -12,10 +12,7 @@ import {
   deriveWrappedMetaKey,
   deriveWrappedMintKey,
 } from "../accounts";
-import {
-  deriveSplTokenMetadataKey,
-  SplTokenMetadataProgram,
-} from "../../utils";
+import { createReadOnlyNftBridgeProgramInterface } from "../program";
 
 export function createTransferWrappedInstruction(
   nftBridgeProgramId: PublicKeyInitData,
@@ -66,7 +63,7 @@ export interface TransferWrappedAccounts {
   fromOwner: PublicKey;
   mint: PublicKey;
   wrappedMeta: PublicKey;
-  splMetadata: PublicKey;
+  tokenMetadata: PublicKey;
   authoritySigner: PublicKey;
   wormholeBridge: PublicKey;
   wormholeMessage: PublicKey;
@@ -77,7 +74,7 @@ export interface TransferWrappedAccounts {
   rent: PublicKey;
   systemProgram: PublicKey;
   tokenProgram: PublicKey;
-  splMetadataProgram: PublicKey;
+  tokenMetadataProgram: PublicKey;
   wormholeProgram: PublicKey;
 }
 
@@ -120,7 +117,7 @@ export function getTransferWrappedAccounts(
     fromOwner: new PublicKey(fromOwner),
     mint,
     wrappedMeta: deriveWrappedMetaKey(nftBridgeProgramId, mint),
-    splMetadata: deriveSplTokenMetadataKey(mint),
+    tokenMetadata: deriveTokenMetadataKey(mint),
     authoritySigner: deriveAuthoritySignerKey(nftBridgeProgramId),
     wormholeBridge,
     wormholeMessage,
@@ -131,7 +128,7 @@ export function getTransferWrappedAccounts(
     rent,
     systemProgram,
     tokenProgram: TOKEN_PROGRAM_ID,
-    splMetadataProgram: SplTokenMetadataProgram.programId,
+    tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
     wormholeProgram: new PublicKey(wormholeProgramId),
   };
 }
