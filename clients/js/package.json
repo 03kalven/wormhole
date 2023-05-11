@@ -1,7 +1,7 @@
 {
   "name": "@wormhole-foundation/wormhole-cli",
   "version": "0.0.3",
-  "sideEffects": ["src/quiet.ts"],
+  "sideEffects": ["src/quiet.ts", "src/cmds/parse.ts"],
   "description": "CLI for Wormhole related activities",
   "homepage": "https://wormhole.com",
   "bin": {
