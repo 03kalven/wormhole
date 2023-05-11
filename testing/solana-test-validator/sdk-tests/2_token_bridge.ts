@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import * as web3 from "@solana/web3.js";
+import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from "@metaplex-foundation/mpl-token-metadata";
 import {
   createMint,
   getAccount,
@@ -54,7 +55,6 @@ import {
   getTransferWrappedWithPayloadCpiAccounts,
   NodeWallet,
   signSendAndConfirmTransaction,
-  SplTokenMetadataProgram,
 } from "../../../sdk/js/src/solana";
 import {
   deriveWormholeEmitterKey,
@@ -187,7 +187,7 @@ describe("Token Bridge", () => {
       expect(accounts.wrappedMeta.toString()).to.equal(
         "8xGY7Bx9cWocPYpKRe3sjCYTdm3YchFJFHmJC5FenW6B"
       );
-      expect(accounts.splMetadata.toString()).to.equal(
+      expect(accounts.tokenMetadata.toString()).to.equal(
         "6dM4TqWyWJsbx7obrdLcviBkTafD5E8av61zfU6jq57X"
       );
       expect(accounts.wormholeBridge.toString()).to.equal(
@@ -528,7 +528,7 @@ describe("Token Bridge", () => {
       expect(accounts.wrappedMeta.toString()).to.equal(
         "AWUK8RTEBvUNAWLz1VfagK3rnvJ9oLDZPBJEBCzpjqj7"
       );
-      expect(accounts.splMetadata.toString()).to.equal(
+      expect(accounts.tokenMetadata.toString()).to.equal(
         "46nJp6UehY8XpgNsSZFTamdXcwiSEQpRGvbBCt2KvVUf"
       );
       expect(accounts.mintAuthority.toString()).to.equal(
@@ -538,9 +538,8 @@ describe("Token Bridge", () => {
       expect(accounts.systemProgram.equals(web3.SystemProgram.programId)).to.be
         .true;
       expect(accounts.tokenProgram.equals(TOKEN_PROGRAM_ID)).is.true;
-      expect(
-        accounts.splMetadataProgram.equals(SplTokenMetadataProgram.programId)
-      ).is.true;
+      expect(accounts.tokenMetadataProgram.equals(TOKEN_METADATA_PROGRAM_ID)).is
+        .true;
       expect(accounts.wormholeProgram.equals(CORE_BRIDGE_ADDRESS)).is.true;
     });
 

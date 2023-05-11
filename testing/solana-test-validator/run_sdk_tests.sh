@@ -15,9 +15,9 @@ ACCOUNTS=$ROOT/sdk-tests/accounts
 TEST=$ROOT/.test
 
 solana-test-validator --reset \
-  --bpf-program metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s $ARTIFACTS/spl_token_metadata.so \
+  --bpf-program metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s $ARTIFACTS/mpl_token_metadata.so \
   --ledger $TEST > validator.log 2>&1 &
-sleep 2
+sleep 5
 
 ### write program logs
 PROGRAM_LOGS=$TEST/program-logs
